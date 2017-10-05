@@ -78,32 +78,21 @@ async def fight(ctx):
 
 # start a battle
 @fight.command(pass_context=True)
-async def start(ctx, wait : int=5):
-    room.countdown(ctx.message.server, ctx.message.channel, wait)
-    await aoi.say('''O-K, let's get this write-fight started!\n\n**Beginning in {} minutes.** Type `::fight join` to enter.'''.format(wait))
-    print(room.DATA)
+async def start(ctx, wait:int=5, duration:int=15):
+    success = room.countdown(ctx.message.server, ctx.message.channel, wait, duration)
 
-# set the default battle duration
-@fight.command()
-async def time(ctx, *time):
-    try:
-        duration = time[0]
-        _data[ctx.message.channel]['duration'] = duration
-
-        await aoi.say(':clock: The default fight time has been set to {} minutes.'.format(duration))
-    except:
-        await aoi.say('The default fight time is currently {} minutes. Say `::fight time #` to change it for new fights!'.format(_data[ctx.message.channel]['duration']))
-
-# cancel current fights
-@fight.command()
-async def cancel():
-    if _data['active']:
-        _data['active'] = False
-        await aoi.say('Aw, changed your mind? Fiiiiiine ~')
-
+    if success:
+        await aoi.say('''O-K, let's get this write-fight started!\n\n**Beginning in {} minutes for {} minutes.** Type `::fight join` to enter.'''.format(wait, duration))
     else:
-        await aoi.say('There\'s no fight on now, silly.')
+        await aoi.say('''Hey, one battle at a time, O-K?''')        
 
+# cancel current battle
+@fight.command(pass_context=True)
+async def cancel(ctx):
+    if room.cancel(ctx.message.server, ctx.message.channel):
+        await aoi.say('Aw, changed your mind? Fiiiiiine ~')
+    else:
+        await aoi.say('There\'s no fight on here, silly.')
 
 
 aoi.run(secret.token)
