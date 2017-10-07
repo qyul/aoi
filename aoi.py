@@ -9,14 +9,6 @@ import starters  # prompt lists
 description = 'Aoi, Blue Angel Writing Bot (by qyuli/s#7377)'
 bot_prefix = '::'
 
-_data = {
-    'active' : False,
-    'duration' : 15
-    }
-
-def rand_emoji(*args):
-    return random.choice(args)
-
 aoi = commands.Bot(description=description, command_prefix=bot_prefix)
 
 @aoi.event
@@ -36,7 +28,7 @@ async def on_message(message):
 
     # Respond to own mentions
     if aoi.user.mentioned_in(message):
-        await aoi.send_message(message.channel, '''Hiiiiii, everyone! I am Aoi, Blue Angel Writing Bot, based off Aoi Zaizen of *Yugioh VRAINS* (CV: Nakashima Yuki). A.k.a., `qyuli/s#7377`'s current best girl.''')
+        await aoi.send_message(message.channel, '''Hiiiiii, everyone! I am Aoi, Blue Angel Writing Bot, based off Aoi Zaizen of *Yugioh VRAINS* (CV: Nakashima Yuki). A.k.a., `qyuli/s#7377`'s fa-vour~ite girl.''')
 
     # Continue to process normal bot commands
     await aoi.process_commands(message)
@@ -108,7 +100,6 @@ async def dream(ctx):
 async def explore(ctx):
     await aoi.say(starters.rand_explore())
 
-
     
 # Write-Fight
 @aoi.group(pass_context=True, description='Begin a word war.\n\'::fight start @ #\', where @ and # are optional numbers.\n@ = countdown, # = duration')
@@ -126,6 +117,8 @@ async def start(ctx, wait:int=5, duration:int=15):
     else:
         await aoi.say('''Hey, one battle at a time, O-K?''')        
 
+    ## timers & end
+
 # cancel current battle
 @fight.command(pass_context=True)
 async def cancel(ctx):
@@ -133,6 +126,5 @@ async def cancel(ctx):
         await aoi.say('Aw, changed your mind? Fiiiiiine ~')
     else:
         await aoi.say('There\'s no fight on here, silly.')
-
 
 aoi.run(secret.token)
