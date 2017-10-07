@@ -1,18 +1,21 @@
 import discord
 from discord.ext import commands
 
-import secret #auth token, .gitignore'd
-import random
-import room
-import wordlist
+import secret    # auth token, .gitignore'd
+import random    # random generator
+import room      # multiple server-channel instances
+import starters  # prompt lists
 
-description = 'Aoi, Blue Angel Writing Bot'
+description = 'Aoi, Blue Angel Writing Bot (by qyuli/s#7377)'
 bot_prefix = '::'
 
 _data = {
     'active' : False,
     'duration' : 15
     }
+
+def rand_emoji(*args):
+    return random.choice(args)
 
 aoi = commands.Bot(description=description, command_prefix=bot_prefix)
 
@@ -33,13 +36,13 @@ async def on_message(message):
 
     # Respond to own mentions
     if aoi.user.mentioned_in(message):
-        await aoi.send_message(message.channel, '''Hiiiiii, everyone! I am Aoi, Blue Angel Writing Bot, based off Aoi Zaizen of Yugioh VRAINS (CV: Nakashima Yuki), or, `qyuli/s#7377`'s fa-vour~ite girl.''')
+        await aoi.send_message(message.channel, '''Hiiiiii, everyone! I am Aoi, Blue Angel Writing Bot, based off Aoi Zaizen of *Yugioh VRAINS* (CV: Nakashima Yuki). A.k.a., `qyuli/s#7377`'s current best girl.''')
 
     # Continue to process normal bot commands
     await aoi.process_commands(message)
 
 # Fun
-@aoi.command(pass_context=True, description='Type a number after the command( ͡° ͜ʖ ͡°)')
+@aoi.command(pass_context=True, description='Type a number( ͡° ͜ʖ ͡°)')
 async def lenny(ctx, n : int = 1):
     if n < 12:
         msg = ''
@@ -70,8 +73,41 @@ async def lenny(ctx, n : int = 1):
             await aoi.say('Woah! Breaking that character limit( ͡° ͜ʖ ͡°)')
 
 
+#::random word
+@aoi.group(pass_context=True, description='Picks from a list. Sub-commands required.')
+async def starter(ctx):
+    if ctx.invoked_subcommand is None:
+        await aoi.say('Be clearer! `::help starter` to see options !')
+
+@starter.command(pass_context=True)
+async def word(ctx):
+    w = starters.rand_word()
+    await aoi.say(':star: - `{}` - :star:'.format(w))
+
+@starter.command(pass_context=True)
+async def prompt(ctx):
+    entry = starters.rand_prompt()
+    emoji = rand_emoji('point_right')
+    await aoi.say('<http://twitter.com/{}/status/{}>\n:{}: `{}`'
+                  .format(entry['user'], entry['id'], emoji, entry['text']))
+
+@starter.command(pass_context=True)
+async def sff(ctx):
+    entry = starters.rand_sff()
+    emoji = rand_emoji('rocket','milky_way','space_invader','comet','dizzy','new_moon_with_face', 'pager')
+    await aoi.say('<http://twitter.com/{}/status/{}>\n:{}: `{}`'
+                  .format(entry['user'], entry['id'], emoji, entry['text']))
+    
+@starter.command(pass_context=True)
+async def omen(ctx):
+    entry = starters.rand_omen()
+    emoji = rand_emoji('grey_question', 'zap', 'cyclone', 'four_leaf_clover', 'paw_prints', 'seedling', 'ghost', 'skull', 'see_no_evil')
+    await aoi.say('<http://twitter.com/{}/status/{}>\n:{}: `{}`'
+                  .format(entry['user'], entry['id'], emoji, entry['text']))
+
+    
 # Write-Fight
-@aoi.group(pass_context=True)
+@aoi.group(pass_context=True, description='Begin a word war.\n\'::fight start @ #\', where @ and # are optional numbers.\n@ = countdown, # = duration')
 async def fight(ctx):
     if ctx.invoked_subcommand is None:
         await aoi.say('Did you want to start a fight? Say `::fight start`, O-K?')
