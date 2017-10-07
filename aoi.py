@@ -77,7 +77,7 @@ async def lenny(ctx, n : int = 1):
 @aoi.group(pass_context=True, description='Picks from a list. Sub-commands required.')
 async def starter(ctx):
     if ctx.invoked_subcommand is None:
-        await aoi.say('Be clearer! `::help starter` to see options !')
+        await aoi.say('Be clearer! `::help starter` to see options☆')
 
 @starter.command(pass_context=True)
 async def word(ctx):
@@ -86,24 +86,28 @@ async def word(ctx):
 
 @starter.command(pass_context=True)
 async def prompt(ctx):
-    entry = starters.rand_prompt()
-    emoji = rand_emoji('point_right')
-    await aoi.say('<http://twitter.com/{}/status/{}>\n:{}: `{}`'
-                  .format(entry['user'], entry['id'], emoji, entry['text']))
+    await aoi.say(starters.rand_prompt())
 
 @starter.command(pass_context=True)
 async def sff(ctx):
-    entry = starters.rand_sff()
-    emoji = rand_emoji('rocket','milky_way','space_invader','comet','dizzy','new_moon_with_face', 'pager')
-    await aoi.say('<http://twitter.com/{}/status/{}>\n:{}: `{}`'
-                  .format(entry['user'], entry['id'], emoji, entry['text']))
+    await aoi.say(starters.rand_sff())
     
 @starter.command(pass_context=True)
 async def omen(ctx):
-    entry = starters.rand_omen()
-    emoji = rand_emoji('grey_question', 'zap', 'cyclone', 'four_leaf_clover', 'paw_prints', 'seedling', 'ghost', 'skull', 'see_no_evil')
-    await aoi.say('<http://twitter.com/{}/status/{}>\n:{}: `{}`'
-                  .format(entry['user'], entry['id'], emoji, entry['text']))
+    await aoi.say(starters.rand_omen())
+
+@starter.command(pass_context=True)
+async def doyle(ctx):
+    await aoi.say(starters.rand_doyle())
+
+@starter.command(pass_context=True)
+async def dream(ctx):
+    await aoi.say(starters.rand_dream())
+
+@starter.command(pass_context=True)
+async def explore(ctx):
+    await aoi.say(starters.rand_explore())
+
 
     
 # Write-Fight

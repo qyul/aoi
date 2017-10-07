@@ -34,18 +34,87 @@ def rand_tweet(name):
     
     return entry
 
+def tweet_formatter(user):
+    def decorator(emoji):    
+        def wrapper():
+            tweet = rand_tweet(user)
+            return '<http://twitter.com/{}/status/{}>\n:{}: `{}`'.format(tweet['user'], tweet['id'], emoji(), tweet['text'])
+        return wrapper
+    return decorator
+
+#prompt
+@tweet_formatter('howboutyouwrite')
 def rand_prompt():
-    return rand_tweet('howboutyouwrite')
+    emoji = random.choice(['point_right'])
+    return emoji
 
+#scifi fantasy
+@tweet_formatter('sff_prompt_bot')
 def rand_sff():
-    return rand_tweet('sff_prompt_bot')
+    emoji = random.choice(['rocket',
+                           'milky_way',
+                           'space_invader',
+                           'comet',
+                           'dizzy',
+                           'new_moon_with_face',
+                           'pager'])
+    return emoji
 
+#omens
+@tweet_formatter('omensbot')
 def rand_omen():
-    return rand_tweet('omensbot')
+    emoji = random.choice(['grey_question',
+                           'zap',
+                           'cyclone',
+                           'four_leaf_clover',
+                           'paw_prints',
+                           'seedling',
+                           'ghost',
+                           'skull',
+                           'see_no_evil'])
+    return emoji
 
+#casemaker
+@tweet_formatter('autodoyle')
+def rand_doyle():
+    emoji = random.choice(['mag',
+                           'mag_right',
+                           'spy',
+                           'cop',
+                           'dark_sunglasses',
+                           'knife',
+                           'grey_question',
+                           'grey_exclamation',
+                           'boom',
+                           'oncoming_police_car'])
+    return emoji
+
+#dreams
+@tweet_formatter('dreamhaver')
 def rand_dream():
-    return rand_tweet('dreamhaver')
+    emoji = random.choice(['crystal_ball',
+                           'low_brightness',
+                           'partly_sunny',
+                           'bookmark',
+                           'memo',
+                           'ear_of_rice',
+                           'snowflake',
+                           'dash'])
+    return emoji
 
+#city explorer
+@tweet_formatter('cityexplorerbot')
 def rand_explore():
-    return rand_tweet('cityexplorerbot')
-
+    emoji = random.choice(['notes',
+                           'foggy',
+                           'radio',
+                           'watch',
+                           'postbox',
+                           'door',
+                           'clapper',
+                           'black_joker',
+                           'hotel',
+                           'office',
+                           'car',
+                           'taxi'])
+    return emoji
