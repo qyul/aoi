@@ -1,6 +1,6 @@
+import os
 import random
 import twitter
-import secret
 import re
 
 with open('wordlist.txt') as f:
@@ -9,10 +9,10 @@ with open('wordlist.txt') as f:
 def rand_word():
     return random.choice(WORDLIST)
 
-api = twitter.Api(consumer_key=secret.twitter[0],
-                  consumer_secret=secret.twitter[1],
-                  access_token_key=secret.twitter[2],
-                  access_token_secret=secret.twitter[3])
+api = twitter.Api(consumer_key=os.getenv('TWITTER_CONSUMER_KEY'),
+                  consumer_secret=os.getenv('TWITTER_CONSUMER_SECRET'),
+                  access_token_key=os.getenv('TWITTER_ACCESS_TOKEN'),
+                  access_token_secret=os.getenv('TWITTER_ACCESS_SECRET'))
 twitter_ids = {
     'howboutyouwrite': 3300806993,
     'sff_prompt_bot': 854481108871725056,

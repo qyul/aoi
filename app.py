@@ -1,8 +1,8 @@
 import discord
 from discord.ext import commands
 
-import secret    # auth token, .gitignore'd
-import random    # random generator
+import os
+import random
 import room      # multiple server-channel instances
 import asyncio
 import starters  # prompt lists
@@ -181,4 +181,4 @@ async def result(ctx, *progress):
         await aoi.say('There\'s nothing to update. Try `::fight start`?')
 
 
-aoi.run(os.getenv(DISCORD_TOKEN))
+aoi.run(os.getenv('DISCORD_TOKEN'))
