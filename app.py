@@ -181,4 +181,4 @@ async def result(ctx, *progress):
         await aoi.say('There\'s nothing to update. Try `::fight start`?')
 
 
-aoi.run(secret.token)
+aoi.run(os.getenv(DISCORD_TOKEN))
