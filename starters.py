@@ -35,9 +35,10 @@ def rand_tweet(name):
     return entry
 
 def tweet_formatter(user):
-    def decorator(emoji):    
+    def decorator(emoji):
         def wrapper():
             tweet = rand_tweet(user)
+            #print(tweet)
             return '<http://twitter.com/{}/status/{}>\n:{}: `{}`'.format(tweet['user'], tweet['id'], emoji(), tweet['text'])
         return wrapper
     return decorator
