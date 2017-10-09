@@ -2,12 +2,14 @@ import discord
 from discord.ext import commands
 
 import os
+import datetime
 import random
 import room      # multiple server-channel instances
 import asyncio
 import starters  # prompt lists
 
-description = 'Aoi, Blue Angel Writing Bot (by qyuli/s#7377)\nver. 0.8 beta'
+version_string = '0.9 bughunting'
+description = 'Aoi, Blue Angel Writing Bot (by qyuli/s#7377)\nver. ' + version_string
 bot_prefix = '::'
 
 aoi = commands.Bot(description=description, command_prefix=bot_prefix)
@@ -17,6 +19,7 @@ async def on_ready():
     print('Login successful')
     print('Name : {}'.format(aoi.user.name))
     print('ID : {}'.format(aoi.user.id))
+    print(datetime.datetime.utcnow().strftime("%a %b %d %H:%M:%S %Z %Y"))
     print(discord.__version__)
 
 
@@ -28,7 +31,7 @@ async def on_message(message):
 
     # Respond to own mentions
     if aoi.user.mentioned_in(message):
-        await aoi.send_message(message.channel, 'Hiiiiii, everyone! I am Aoi, Blue Angel Writing Bot, based off Aoi Zaizen of *Yugioh VRAINS* (CV: Nakashima Yuki). A.k.a., `qyuli/s#7377`\'s fa-vour~ite girl.')
+        await aoi.send_message(message.channel, 'Hiiiiii, everyone! I am Aoi, Blue Angel Writing Bot, based off Aoi Zaizen of *Yugioh VRAINS* (CV: Nakashima Yuki). A.k.a., `qyuli/s#7377`\'s fa-vour~ite girl.\n\nSee `::help` for commands!')
 
     # Continue to process normal bot commands
     await aoi.process_commands(message)
@@ -105,7 +108,9 @@ async def explore(ctx):
 @aoi.group(pass_context=True, help='Begin a word war')
 async def fight(ctx):
     if ctx.invoked_subcommand is None:
-        await aoi.say('Did you want to start a fight? Say `::fight start`, O-K?')
+        await aoi.say(random.choice(['Did you want to start a fight? Say `::fight start`, O-K?',
+                                     'There\'s no fight on right now. Try `::fight start` if you wanted to go!'
+                                     ]))
 
 # start a battle
 @fight.command(pass_context=True, help='[wait=5] [duration=15]')
@@ -114,7 +119,8 @@ async def start(ctx, wait:int=5, duration:int=15):
     success = room.start(ctx, nonce)
     
     if success:
-        await aoi.say('O-K, let\'s get this write-fight started!\n\n**Beginning in {} minutes for {} minutes.** Type `::fight join` to enter.'.format(wait, duration))
+        await aoi.say(random.choice(['O-K, let\'s get this write-fight started!',
+                                     'Let\'s do this, here we go!']) + '\n\n**Beginning in {} minutes for {} minutes.** Type `::fight join` to enter.'.format(wait, duration))
         room.add_participant(ctx)
         await asyncio.sleep(wait*60)
 
@@ -125,7 +131,8 @@ async def start(ctx, wait:int=5, duration:int=15):
         players = ', '.join(room.get_participants(ctx))
         await aoi.say(random.choice([
                         'Here we go. {}, fiiiiiiight start!'.format(players),
-                        '{}. Ready? GO!'.format(players)
+                        '{}. Ready? GO!'.format(players),
+                        'Playtime\'s over, {}, it\'s time to duel!'.format(players)
                                     ]))
         await asyncio.sleep(duration*60)
         
@@ -150,7 +157,11 @@ async def start(ctx, wait:int=5, duration:int=15):
             print('attempting to sort with results {}'.format(results))
             for r in keys:
                 formatted += '{:25.20}{}\n'.format(r.display_name, ' '.join(results[r]))
-            await aoi.say(('''So hey, here are the results from the last battle:\n```{}```\nThanks for playing! :star2:''').format(formatted))
+            await aoi.say(('''So hey, here are the results from the last battle:\n```{}```\n''').format(formatted) + random.choice([
+                                'Thanks for playing! :star2:',
+                                'Nice one!! :star2:',
+                                'Good work, everybodyyy! :star2:'
+                                ]))
         
     else:
         await aoi.say('Hey, one battle in here at a time, O-K?')
@@ -160,7 +171,9 @@ async def start(ctx, wait:int=5, duration:int=15):
 async def cancel(ctx):
     if room.active(ctx):
         room.terminate(ctx, completed=False)
-        await aoi.say('Aw, changed your mind? Fiiiiiine ~')
+        await aoi.say(random.choice(['Aw, changed your mind? Fiiiiiine ~',
+                                     'Next time? I\'ll hold you to it!'
+                                     ]))
     else:
         await aoi.say('There\'s no fight on here, silly.')
 

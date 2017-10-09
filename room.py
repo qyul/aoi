@@ -23,8 +23,10 @@ def active(ctx, *nonce):
     location = identify(ctx)
     if location in active_rooms:
         if nonce:
-            if nonce[0] != active_rooms[location]['nonce']:
-                print('[!] nonce error.')
+            nonce = nonce[0]
+            print('verifying nonce {}'.format(nonce))
+            if nonce != active_rooms[location]['nonce']:
+                print('[!] nonce error (target nonce: {}).'.format(nonce))
                 return False
         return True
     else:
@@ -46,7 +48,7 @@ def add_participant(ctx):
     location = identify(ctx)
     try:
         active_rooms[location][ctx.message.author] = ('Unknown',)
-        print('current participant list for instance {} : {}'.format(active_rooms[location]['nonce'], active_rooms[location]))
+        print('current room details for instance {} : {}'.format(active_rooms[location]['nonce'], active_rooms[location]))
         return True
     except:
         return False
