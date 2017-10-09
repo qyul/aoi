@@ -16,6 +16,7 @@ def start(ctx, nonce):
     else:
         # create room
         active_rooms[location] = {'nonce': nonce}
+        print('\n******* creating room ... id {}'.format(nonce))
         return True
 
 def active(ctx, *nonce):
@@ -23,7 +24,7 @@ def active(ctx, *nonce):
     if location in active_rooms:
         if nonce:
             if nonce[0] != active_rooms[location]['nonce']:
-                #print('nonce error.')
+                print('[!] nonce error.')
                 return False
         return True
     else:
@@ -32,6 +33,7 @@ def active(ctx, *nonce):
 def terminate(ctx, completed=False):
     location = identify(ctx)
     if location in active_rooms:
+        print('>> terminating instance {}'.format(active_rooms[location]['nonce']))
         if completed:
             #move participant list to historical data
             past_rooms[location] = active_rooms[location]
@@ -43,7 +45,8 @@ def terminate(ctx, completed=False):
 def add_participant(ctx):
     location = identify(ctx)
     try:
-        active_rooms[location][ctx.message.author] = 'Unknown'
+        active_rooms[location][ctx.message.author] = ('Unknown',)
+        print('current participant list for instance {} : {}'.format(active_rooms[location]['nonce'], active_rooms[location]))
         return True
     except:
         return False
@@ -67,7 +70,7 @@ def get_participants(ctx):
                 pass
         return mentionable
     except:
-        print('error')
+        print('[!] error getting participants, active room is {}'.format(active_rooms[location]))
 
 def generate_results(ctx):
     location = identify(ctx)

@@ -18,7 +18,6 @@ async def on_ready():
     print('Name : {}'.format(aoi.user.name))
     print('ID : {}'.format(aoi.user.id))
     print(discord.__version__)
-    #print(dir(discord.Server.id))
 
 
 @aoi.event
@@ -129,19 +128,26 @@ async def start(ctx, wait:int=5, duration:int=15):
                         '{}. Ready? GO!'.format(players)
                                     ]))
         await asyncio.sleep(duration*60)
-
+        
         # check if fight is still active after time ends
         if not room.active(ctx, nonce):
             return
 
         room.terminate(ctx, completed=True)
         await aoi.say(':clock: Aaaaand that\'s time!\n**You have three minutes to submit your results with `::fight result ##`.**')
-        await asyncio.sleep(80)
+        await asyncio.sleep(180)
 
         results = room.generate_results(ctx)
         if results:
-            keys = sorted(results, key=results.get, reverse=True)
+            try:
+                keys = sorted(results, key=results.get, reverse=True)
+            except:
+                print('[!] error sorting, using results as given....')
+                print('results:{}'.format(results))
+                keys = results
+                
             formatted = ''
+            print('attempting to sort with results {}'.format(results))
             for r in keys:
                 formatted += '{:25.20}{}\n'.format(r.display_name, ' '.join(results[r]))
             await aoi.say(('''So hey, here are the results from the last battle:\n```{}```\nThanks for playing! :star2:''').format(formatted))
@@ -176,7 +182,7 @@ async def result(ctx, *progress):
                                                         '\U00002665',
                                                         '\U0001F389',
                                                         '\U0001F386'])))
-        print('Progress saved')
+        print('Progress saved for {}'.format(ctx.message.author.display_name))
     else:
         await aoi.say('There\'s nothing to update. Try `::fight start`?')
 
