@@ -4,11 +4,12 @@ from discord.ext import commands
 import os
 import datetime
 import random
+import re
 import room      # multiple server-channel instances
 import asyncio
 import starters  # prompt lists
 
-version_string = '0.9 bughunting'
+version_string = '1.0 Somewhat More Responsive Now'
 description = 'Aoi, Blue Angel Writing Bot (by qyuli/s#7377)\nver. ' + version_string
 bot_prefix = '::'
 
@@ -16,10 +17,10 @@ aoi = commands.Bot(description=description, command_prefix=bot_prefix)
 
 @aoi.event
 async def on_ready():
-    print('Login successful')
+    print('Login successful, version {}'.format(version_string))
     print('Name : {}'.format(aoi.user.name))
     print('ID : {}'.format(aoi.user.id))
-    print(datetime.datetime.utcnow().strftime("%a %b %d %H:%M:%S %Z %Y"))
+    print(datetime.datetime.utcnow().strftime("%a %b %d %H:%M:%S UTC %Z %Y"))
     print(discord.__version__)
 
 
@@ -29,9 +30,30 @@ async def on_message(message):
     if message.author == aoi.user:
         return
 
+    # prevent reply to @everyone
+    if message.mention_everyone:
+        return
+
     # Respond to own mentions
     if aoi.user.mentioned_in(message):
-        await aoi.send_message(message.channel, 'Hiiiiii, everyone! I am Aoi, Blue Angel Writing Bot, based off Aoi Zaizen of *Yugioh VRAINS* (CV: Nakashima Yuki). A.k.a., `qyuli/s#7377`\'s fa-vour~ite girl.\n\nSee `::help` for commands!')
+        thank = re.compile(r'\b(thanks*|ty(vm)*|thx|thankyou)\b', re.IGNORECASE)
+        if re.search(thank, message.clean_content) is not None:
+            rand = random.randint(0,1)
+            if rand == 0:
+                await aoi.add_reaction(message, random.choice(['\U0001F618',
+                                                        '\U00002665',
+                                                        '\U0001F495',
+                                                        '\U0001F49D',
+                                                        '\U00002763',
+                                                        '\U0001F48C']))
+            else:
+                await aoi.send_message(message.channel, random.choice([
+                                                        'You\'re absolutely welcome!\U00002665',
+                                                        'Always. \U0001F618',
+                                                        '\U0001F916\U0001F495']))
+        else:
+            await aoi.send_message(message.channel, 'Hiiiiii, everyone! I am Aoi, Blue Angel Writing Bot, based off Aoi Zaizen of *Yugioh VRAINS* (CV: Nakashima Yuki). A.k.a., `qyuli/s#7377`\'s fa-vour~ite girl.\n\nSee `::help` for commands!')
+            
 
     # Continue to process normal bot commands
     await aoi.process_commands(message)
@@ -103,6 +125,10 @@ async def dream(ctx):
 async def explore(ctx):
     await aoi.say(starters.rand_explore())
 
+@starter.command(pass_context=True, help='Mood')
+async def mood(ctx):
+    await aoi.say(starters.rand_mood())
+
     
 # Write-Fight
 @aoi.group(pass_context=True, help='Begin a word war')
@@ -141,7 +167,7 @@ async def start(ctx, wait:int=5, duration:int=15):
             return
 
         room.terminate(ctx, completed=True)
-        await aoi.say(':clock: Aaaaand that\'s time!\n**You have three minutes to submit your results with `::fight result ##`.**')
+        await aoi.say(':clock: Aaaaand that\'s time!\n**Calling {}. You have three minutes to submit your results with `::fight result ##`.**'.format(players))
         await asyncio.sleep(180)
 
         results = room.generate_results(ctx)

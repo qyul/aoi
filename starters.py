@@ -2,12 +2,13 @@ import os
 import random
 import twitter
 import re
-
-with open('wordlist.txt') as f:
-    WORDLIST = f.read().splitlines()
+import json
 
 def rand_word():
-    return random.choice(WORDLIST)
+    with open('wordlist.txt') as f:
+        wordlist = f.read().splitlines()
+    
+    return random.choice(wordlist)
 
 api = twitter.Api(consumer_key=os.getenv('TWITTER_CONSUMER_KEY'),
                   consumer_secret=os.getenv('TWITTER_CONSUMER_SECRET'),
@@ -119,3 +120,25 @@ def rand_explore():
                            'car',
                            'taxi'])
     return emoji
+
+#moodbot_
+# moodbot_ is a special case in that it is no longer regularly updated,
+# so the normal "pick a random tweet from the 20 recent tweets" method 
+# will not work. Thus its tweets have been fetched into a local file.
+def rand_mood():
+    with open('moodlist.json') as json_data:
+        d = json.load(json_data)
+
+    tweet_text = random.choice(list(d["moods"]))
+    tweet_id = d["moods"][tweet_text]
+
+    emoji = random.choice(['herb',
+                           'shamrock',
+                           'maple_leaf',
+                           'ear_of_rice',
+                           'hibiscus',
+                           'sunflower',
+                           'tulip',
+                           'blossom'])
+
+    return '<http://twitter.com/moodbot_/status/{}>\n:{}: `{}`'.format(tweet_id, emoji, tweet_text)
