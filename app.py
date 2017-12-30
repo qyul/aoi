@@ -125,7 +125,7 @@ async def dream(ctx):
 async def explore(ctx):
     await aoi.say(starters.rand_explore())
 
-@starter.command(pass_context=True, help='Mood')
+@starter.command(pass_context=True)
 async def mood(ctx):
     await aoi.say(starters.rand_mood())
 
