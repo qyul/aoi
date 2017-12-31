@@ -142,7 +142,7 @@ async def lenny(ctx, n : int = 1):
 
 
 #::random word
-@aoi.group(pass_context=True, help='Picks from a list. Sub-command required. (see all with ::help starter)')
+@aoi.group(pass_context=True, help='Picks from a list. Sub-command required. (::help starter)')
 async def starter(ctx):
     if ctx.invoked_subcommand is None:
         await aoi.say('Be clearer! `::help starter` to see options☆')
