@@ -17,6 +17,7 @@ def start(ctx, nonce):
         # create room
         active_rooms[location] = {'nonce': nonce}
         print('\n******* creating room ... id {}'.format(nonce))
+        print(datetime.datetime.utcnow().strftime("%a %b %d %H:%M:%S UTC %Z %Y"))
         return True
 
 def active(ctx, *nonce):

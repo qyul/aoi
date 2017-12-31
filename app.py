@@ -9,7 +9,7 @@ import room      # multiple server-channel instances
 import asyncio
 import starters  # prompt lists
 
-version_string = '1.0 Somewhat More Responsive Now'
+version_string = '1.1 Junk Mail Is Now Acceptable'
 description = 'Aoi, Blue Angel Writing Bot (by qyuli/s#7377)\nver. ' + version_string
 bot_prefix = '::'
 
@@ -52,11 +52,62 @@ async def on_message(message):
                                                         'Always. \U0001F618',
                                                         '\U0001F916\U0001F495']))
         else:
-            await aoi.send_message(message.channel, 'Hiiiiii, everyone! I am Aoi, Blue Angel Writing Bot, based off Aoi Zaizen of *Yugioh VRAINS* (CV: Nakashima Yuki). A.k.a., `qyuli/s#7377`\'s fa-vour~ite girl.\n\nSee `::help` for commands!')
-            
+            await aoi.send_message(message.channel, random.choice([
+                                                    'Did you call?',
+                                                    'Everyone believes in me. So, I\'ll fight for everyone.',
+                                                    'Full speed ahead!',
+                                                    'Sorry, what were you saying ...?',
+                                                    'Don\'t get ahead of yourself now ...',
+                                                    '\U0001F31F\U0001F31F\U0001F31F',
+                                                    'I hear the show I\'m from isn\'t worth watching.\nSo then   ... when does it become *my* show ...',
+                                                    '`::help` is what you\'re after, sweetums.',
+                                                    ]))
 
     # Continue to process normal bot commands
     await aoi.process_commands(message)
+
+#info
+@aoi.command(pass_context=True, help='Getting Started Guide! (warning: long)')
+async def bot_info(ctx):
+    await aoi.say("""Hiiiiiii, everyone! Blue Angel is here!
+So, let's get started.
+
+:blue_heart: **Word Wars** :blue_heart:
+Want to challenge people to a duel? Type `::fight start` to get a room set up.
+`::fight join` adds you in for notifications if a room exists in that channel!
+
+The default timings is a delay of 5 minutes and a duration of 15.
+Type up to two numbers after to change the delay and then the duration.
+`::fight start 0` begins at once and goes for 15!
+`::fight start 3 20` starts in 3 minutes and goes for 20.
+  (Sorry, non-integers aren't allowed.)
+
+When submitting your result, `::fight result [progress ...]` *does* accept non-number answers!
+
+Use `::fight cancel` at any time if you decide it's not for you ~
+
+
+:blue_heart: **Starters** :blue_heart:
+So~so, need something? These are random prompts.
+
+`::starter word` for a random word!
+`::starter dream` to be visited by a mystery ...
+`::starter omen`, if it's always Halloween ~
+
+Type `::help starter` to see all the options!
+
+
+:blue_heart: **( ͡° ͜ʖ ͡°)** :blue_heart:
+`::lenny`
+`::lenny 3`
+
+Try it. ;)
+
+
+:blue_heart::blue_heart::blue_heart:
+Use `::help` for more details, and send bugs/feature requests/junk mail to `qyuli/s#7377`. (It's OK. I'm *fav~our~ite~* girl ~~.)
+
+xoxo :heart_exclamation::call_me::call_me:""")
 
 # Fun
 @aoi.command(pass_context=True, description='Type a number( ͡° ͜ʖ ͡°)')
@@ -91,7 +142,7 @@ async def lenny(ctx, n : int = 1):
 
 
 #::random word
-@aoi.group(pass_context=True, help='Picks from a list. Sub-command required.')
+@aoi.group(pass_context=True, help='Picks from a list. Sub-command required. (see all with ::help starter)')
 async def starter(ctx):
     if ctx.invoked_subcommand is None:
         await aoi.say('Be clearer! `::help starter` to see options☆')
@@ -131,7 +182,7 @@ async def mood(ctx):
 
     
 # Write-Fight
-@aoi.group(pass_context=True, help='Begin a word war')
+@aoi.group(pass_context=True, help='Begin a word war.')
 async def fight(ctx):
     if ctx.invoked_subcommand is None:
         await aoi.say(random.choice(['Did you want to start a fight? Say `::fight start`, O-K?',
@@ -198,7 +249,8 @@ async def cancel(ctx):
     if room.active(ctx):
         room.terminate(ctx, completed=False)
         await aoi.say(random.choice(['Aw, changed your mind? Fiiiiiine ~',
-                                     'Next time? I\'ll hold you to it!'
+                                     'Next time? I\'ll hold you to it!',
+                                     'Huh? Cold feet? That\'s fine, too.'
                                      ]))
     else:
         await aoi.say('There\'s no fight on here, silly.')
