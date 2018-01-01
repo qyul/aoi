@@ -9,7 +9,7 @@ import room      # multiple server-channel instances
 import asyncio
 import starters  # prompt lists
 
-version_string = '1.1 Junk Mail Is Now Acceptable'
+version_string = '1.11 Imports now importing'
 description = 'Aoi, Blue Angel Writing Bot (by qyuli/s#7377)\nver. ' + version_string
 bot_prefix = '::'
 

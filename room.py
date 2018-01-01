@@ -3,6 +3,8 @@ To make it possible for multiple write fights at a time,
 a (server, channel) tuple is used as index (id cannot be retrieved)
 '''
 
+import datetime
+
 active_rooms = {}
 past_rooms = {}
 
@@ -17,7 +19,7 @@ def start(ctx, nonce):
         # create room
         active_rooms[location] = {'nonce': nonce}
         print('\n******* creating room ... id {}'.format(nonce))
-        print(datetime.datetime.utcnow().strftime("%a %b %d %H:%M:%S UTC %Z %Y"))
+        print(datetime.datetime.utcnow().strftime("**** Timestamp: %a %b %d %H:%M:%S UTC %Z %Y"))
         return True
 
 def active(ctx, *nonce):
